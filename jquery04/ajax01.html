@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+</head>
+<body>
+  <script>
+    $(document).ready(function(){
+    /*  $.ajax({
+        //에이작스(ajax) 기본이 되는 형태
+        // 데이터를 전송을해서 접속할 url(주소)를 먼저 줘야함
+        url : 'http://192.168.0.29/myserver/empSelect',
+
+        // 데이터를 전송하는 방식 tpye(get, post)
+        type : 'GET',
+
+        // 전송할 데이터 data
+        data : 'data',
+
+        //전송할 데이터의 content-type : application/x-www-form-urlencoded
+        contentType : data,
+
+        //리턴되는 데이터의 타입
+        dataType : 'json',
+
+        //전송에 성공했을경우
+        success : function(data){ // function으로 매칭
+
+        },
+        //전송에 실패했을 경우
+        error : function(reject){ // function으로 매칭
+
+        }
+
+        //async 필드 : 동기식과 비동기식을 제어. 디폴트값으로, false - 동기식으로 동작
+        //beforeSend : 전송 전 이루어져야하는 직업(function) 등록
+      }); */
+
+      $.ajax({
+       // url : 'MOCK_DATA.json', // url : 'http://192.168.0.29/myserver/empSelect' 이게 안되서 다른걸로 한거였음
+       url : 'http://192.168.0.29/myserver/empSelect',
+        dataType : 'json',
+        success : function(data){
+          //테이블 생성
+          let table = $('<table/>');
+          
+          //테이블 헤더 구성
+          let trTag = $('<tr/>');
+          let header = data[0]; // 객체 하나를 가져오고
+          for(let field in header){ //for문을 통해서 필드를 구성하고
+            $(trTag).append($('<th/>').text(field)); // th를 구성하고 여기에 들어가는 text값을 필드로 둔다 이후 미리 만들어둔 tr(trTag)에 append한다
+          }
+          $(table).append(trTag); // append한 값을 table에 append한다
+
+          //테이블 각 행 구성
+          $(data).each(function(idx, obj){
+            trTag = $('<tr/>'); // 첫번째 tr태그를 만들고
+            for(let field in header){ // for문으로 header에서 field를 가져와
+              $(trTag).append($('<th/>').text(obj[field])); // 객체안에서 필드에 해당되는 값을 td에 넣는다
+          }
+            $(table).append(trTag); // for문이 돌기전에 table에 append
+          });
+
+          //div 태그에 테이블 추가
+          $('#content').append(table); // 최종적으로 다 append 된 테이블을 미리만들어둔 <div>content에 append한다
+        },
+        error : function(reject){
+          console.log(reject);
+        }
+      });
+    });
+  </script>
+<div id="content"></div>
+</body>
+</html>

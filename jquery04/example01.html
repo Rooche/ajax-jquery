@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+</head>
+
+<body>
+  <script>
+    $(document).ready(function () {
+      $('#updateBtn').click(updateEmployee);
+      $('#deleteBtn').click(deleteEmployee);
+      $('#selectBtn').click(selectEmployee);
+
+      $('#submit').on('click', function(){
+      $.ajax({
+        url : 'http://192.168.0.29/myserver/empInsert',
+        type : 'POST',
+        data : $('#info').serialize(), //해당되는 폼을 이용해서 serialize의 형태로 넘겨주면되는데 serialize는 입력한 데이터를 쿼리형태로 바꿔준다
+        //serialize() -> field1 = value1&field2=value2
+
+        success : function(data){
+          console.log(data);
+        },
+        error : function(reject){
+          console.log(reject);
+        }
+      });
+    });
+
+
+      function updateEmployee() {
+        $.ajax({
+          url: 'http://192.168.0.29/myserver/empUpdate',
+          type: 'post',
+          data: $('#info').serialize(),
+          dataType: 'json',
+          success: function (data) {
+            if (data != null) {
+              alert("수정 완료");
+            }
+          },
+          error: function (reject) {
+            console.log(reject);
+            alert("에러");
+          }
+        });
+      };
+
+
+      function deleteEmployee() {
+        $.ajax({
+          url: 'http://192.168.0.29/myserver/empDelete',
+          type : 'post',
+          data: { employee_id: $('#employee_id').val() },
+          dataType: 'json',
+          success: function (data) {
+            if(data != null){
+              alert("삭제 완료");
+            }
+          },
+          error: function (reject) {
+            console.log(reject);
+          }
+        });
+      };
+
+
+      function selectEmployee() {
+        $.ajax({
+          url: 'http://192.168.0.29/myserver/empFind',
+          type: 'get',
+          data: { employee_id: $('#empId').val() },
+          dataType: 'json',
+          success: function (data) {
+            for (let field in data) {
+              $('#' + field).val(data[field]);
+            }
+          },
+          error: function (reject) {
+            console.log(reject);
+          }
+        });
+      };
+
+      $.ajax({
+       url : 'http://192.168.0.29/myserver/empSelect',
+        dataType : 'json',
+        success : function(data){
+          let table = $('<table border=1px solid blue>');
+          let trTag = $('<tr/>');
+          let header = data[0]; 
+          for(let field in header){
+            $(trTag).append($('<th/>').text(field));
+          }
+          $(table).append(trTag);
+          $(data).each(function(idx, obj){
+            trTag = $('<tr/>');
+            for(let field in header){
+              $(trTag).append($('<th/>').text(obj[field]));
+          }
+            $(table).append(trTag);
+          });
+          $('#content').append(table);
+        },
+        error : function(reject){
+          console.log(reject);
+        }
+      });
+  });
+  </script>
+
+<form id="info" onsubmit="return false">
+    <!--전체조회, 해당 사원 정보 조회-->
+   <div>
+    <label for="empId">사원번호</label>
+    <input type="number" id="empId" name="employee_id">
+    <button type="button" id="selectBtn">조회</button>
+  </div>
+    <div>
+      <!--입력, 수정, 삭제-->
+      <button type="submit" id="submit">입력</button>
+      <button type="button" id="updateBtn">수정</button>
+      <button type="button" id="deleteBtn">삭제</button>
+    </div>
+    <div>
+      <label for="employee_id">사원번호</label>
+      <input type="number" id="employee_id" name="employee_id">
+    </div>
+    <div>
+      <label for="first_name">이름</label>
+      <input type="text" id="first_name" name="first_name">
+    </div>
+    <div>
+      <label for="last_name">성</label>
+      <input type="text" id="last_name" name="last_name">
+    </div>
+    <div>
+      <label for="email">이메일</label>
+      <input type="email" id="email" name="email">
+    </div>
+    <div>
+      <label for="job_id">직책</label>
+      <input type="text" id="job_id" name="job_id">
+    </div>
+    <div id="content"></div>
+ </form>
+</body>
+</html>

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+</head>
+<body>
+  <script>
+    $(document).ready(function(){
+      $('.menuWrap_1 a').on('click', function(e){
+        e.preventDefault();
+        $('.menuWrap_1 a').css('background-color', 'black'); // 전체태그에 대해서 색을 변경
+        $(this).css('background-color', 'pink'); // this라는 선택자를 이용해서 해당태그에 대해서 다른 컬러로 바꾸도록.
+      });
+
+      //index를 반환하는 메소드
+      $('.menuWrap_2 a').on('click', function(e){
+        e.preventDefault();
+        $('.menuWrap_2 a').css('background-color', 'yellow');
+        let index = $('.menuWrap_2 a').index(this); // index를 가져올때 조건이 필요한데 그때 this를 넘겨주면 몇번째 index인지를 확인할수있다
+        $('.menuWrap_2 a').eq(index).css('background-color', 'green');
+        $('.idxNum').text(index); // 맨밑 p태그로 해둔 idxNum을 통해 몇번째 인덱스를 눌렀는지 직접적으로 확인해본다.
+      });
+
+    });
+  </script>
+  <h2>$(this)</h2>
+  <ul class="menuWrap_1">
+    <li><a href="#">메뉴1</a></li>
+    <li><a href="#">메뉴2</a></li>
+    <li><a href="#">메뉴3</a></li>
+  </ul>
+  <h2>index()</h2>
+  <ul class="menuWrap_2">
+    <li><a href="#">메뉴4</a></li>
+    <li><a href="#">메뉴5</a></li>
+    <li><a href="#">메뉴6</a></li>
+  </ul>
+  <p class="idxNum"></p>
+</body>
+</html>
